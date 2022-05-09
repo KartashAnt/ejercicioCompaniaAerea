@@ -1,8 +1,10 @@
 package paquetePrincipal;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Vuelo {
+	static final DateTimeFormatter formateo=DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm");
 	static int numVuelo=0;
 	int numAvion;
 	String codigo;
@@ -11,15 +13,6 @@ public class Vuelo {
 	Ciudad destino;
 	LocalDateTime fechaLlegada;
 	
-	public Vuelo(int numAvion, Ciudad origen, LocalDateTime fechaSalida, Ciudad destino) {
-		super();
-		numVuelo++;
-		this.numAvion = numAvion;
-		this.origen = origen;
-		this.fechaSalida = fechaSalida;
-		this.destino = destino;
-		this.codigo=generarCodigo();
-	}
 	public Vuelo(int numAvion, Ciudad origen, LocalDateTime fechaSalida, Ciudad destino,
 			LocalDateTime fechaLlegada) {
 		super();
@@ -30,6 +23,14 @@ public class Vuelo {
 		this.destino = destino;
 		this.fechaLlegada = fechaLlegada;
 		this.codigo=generarCodigo();
+	}
+	
+	@Override
+	public String toString() {
+		if(this.fechaLlegada.getDayOfMonth()==this.fechaSalida.getDayOfMonth())
+		return this.codigo + " : " + origen + " -> " + destino + " : " + fechaSalida.format(formateo) + " -> " + fechaLlegada.format(formateo);
+		else
+			return this.codigo + " : " + origen + " -> " + destino + " : " + fechaSalida.format(formateo) + " -> " + fechaLlegada.format(formateo) + "del dia siguiente";
 	}
 	public String generarCodigo(){
 		return numAvion+origen.name().substring(0,2)+destino.name().substring(0,2)+numVuelo;
@@ -70,5 +71,6 @@ public class Vuelo {
 	public void setFechaLlegada(LocalDateTime fechaLlegada) {
 		this.fechaLlegada = fechaLlegada;
 	}
+	
 	
 }

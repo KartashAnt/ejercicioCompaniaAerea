@@ -1,23 +1,31 @@
 package paquetePrincipal;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
 
-public class Principal extends JFrame {
+
+public class Principal extends JFrame implements ActionListener{
 
 	static JPanel contentPane;
+	static JButton botonListado;
 	static LocalDate fecha;
 	static JLabel fechamostrada;
 	static DateTimeFormatter formateo=DateTimeFormatter.ofPattern("dd/MM/YYYY");
 	static LinkedList<Avion> aviones=new LinkedList<>();
 	static LinkedList<Vuelo> vuelos=new LinkedList<>();
+	static HashMap<String, Integer> duracionesVuelos=new HashMap<>();
 	
  	/**
 	 * Launch the application.
@@ -34,16 +42,19 @@ public class Principal extends JFrame {
 	public Principal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		contentPane = new JPanel();
+		contentPane = new JPanel(new BorderLayout());
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		botonListado=new JButton("Listar vuelos");
+		contentPane.add(botonListado, BorderLayout.EAST);
+		botonListado.addActionListener(this);
+		botonListado.setActionCommand("Lista");
 		fechamostrada=new JLabel();
+		fechamostrada.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(fechamostrada, BorderLayout.NORTH);
 		fechamostrada.setText(fecha.format(formateo));
 		fechamostrada.setFont(new Font("Verdana", 1, 25));
 		Dimension texto=fechamostrada.getPreferredSize();
 		fechamostrada.setBounds(225-texto.width/2, 50-texto.height/2, texto.width, texto.height);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		contentPane.add(fechamostrada);
-		fechamostrada.setVisible(true);
 		setContentPane(contentPane);
 	}
 	public static void inicio() {
@@ -52,10 +63,29 @@ public class Principal extends JFrame {
 			aviones.add(new Avion(i, Ciudad.MADRID));
 		}
 	}
-	public static void listarVuelos() {
-		String vuelos;
+	public void listarVuelos(Principal frame) {
+		JPanel conjunto=new JPanel(new BorderLayout());
+		conjunto.setBorder(new EmptyBorder(5, 5, 5, 5));
+		String lista="Vuelos realizado hasta " + fecha.format(formateo);
+		if(vuelos.size()>0) {
+			for (Vuelo vuelo : vuelos) {
+				lista+="\n" + vuelo;
+			}
+		}
+		else {
+			lista+="\nTodavía no se realizo ningun vuelo";
+		}
+		JTextArea texto= new JTextArea(lista);
+		JScrollPane listado=new JScrollPane(texto);
+		conjunto.add(listado, BorderLayout.CENTER);
+		JButton botonVuelta=new JButton("Volver");
+		botonVuelta.addActionListener(this);
+		botonVuelta.setActionCommand("Volver");
+		conjunto.add(botonVuelta, BorderLayout.SOUTH);
+		frame.setContentPane(conjunto);
+		conjunto.revalidate();
 	}
-	public static Ciudad[] generarDestinos(){
+	public Ciudad[] generarDestinos(){
 		Ciudad[] destinos= new Ciudad[4];
 		Random r=new Random();
 		for (int i = 0; i < destinos.length; i++) {
@@ -74,5 +104,20 @@ public class Principal extends JFrame {
 			destinos[i]=Ciudad.values()[ord];
 		}
 		return destinos;
+	}
+	
+	public void pasarElDia() {
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String comando=e.getActionCommand();
+		if(comando.equals("Lista")) {
+			listarVuelos(this);
+		}
+		else if(comando.equals("Volver")) {
+			this.setContentPane(contentPane);
+		}
 	}
 }
