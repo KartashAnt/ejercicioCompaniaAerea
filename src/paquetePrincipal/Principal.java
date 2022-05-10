@@ -45,7 +45,7 @@ public class Principal extends JFrame implements ActionListener{
 		contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		botonListado=new JButton("Listar vuelos");
-		contentPane.add(botonListado, BorderLayout.EAST);
+		contentPane.add(botonListado, BorderLayout.CENTER);
 		botonListado.addActionListener(this);
 		botonListado.setActionCommand("Lista");
 		fechamostrada=new JLabel();
@@ -118,6 +118,7 @@ public class Principal extends JFrame implements ActionListener{
 		}
 		else if(comando.equals("Volver")) {
 			this.setContentPane(contentPane);
+			contentPane.revalidate();
 		}
 	}
 }
