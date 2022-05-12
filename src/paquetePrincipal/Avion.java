@@ -1,8 +1,8 @@
 package paquetePrincipal;
 
 public class Avion {
-	int numero;
-	Ciudad disposicion;
+	private int numero;
+	private Ciudad disposicion;
 	public Avion(int numero, Ciudad disposicion) {
 		super();
 		this.numero = numero;

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -92,7 +93,7 @@ public class Principal extends JFrame implements ActionListener{
 		conjunto.revalidate();
 	}
 	public Ciudad[] generarDestinos(){
-		Ciudad[] destinos= new Ciudad[4];
+		Ciudad[] destinos= new Ciudad[aviones.size()];
 		Random r=new Random();
 		for (int i = 0; i < destinos.length; i++) {
 			boolean invalido=true;
@@ -113,10 +114,38 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	
 	public void pasarElDia() {
+		JPanel vuelosDiarios=new JPanel(new BorderLayout());
+		vuelosDiarios.setBorder(new EmptyBorder(5, 5, 5, 5));
+		JTextArea vuelosHoy=new JTextArea();
 		Random r=new Random();
-		int hora=r.nextInt(17)+7;
-		int minuto=r.nextInt(12)*5;
-		LocalTime horaSalida=LocalTime.of(hora, minuto);
+		Ciudad[] destinos=generarDestinos();
+		vuelosHoy.append("Vuelos:\t" + fechamostrada.getText() + "\t\t" + "Hora de la salida");
+		for (int i = 0; i < destinos.length; i++) {
+			int hora=r.nextInt(17)+7;
+			int minuto=r.nextInt(12)*5;
+			LocalTime horaSalida=LocalTime.of(hora, minuto);
+			vuelos.add(new Vuelo(aviones.get(i).getNumero(), aviones.get(i).getDisposicion(), LocalDateTime.of(fecha, horaSalida), destinos[i]));
+			vuelosHoy.append("\n"+vuelos.getLast());
+			vuelos.getLast().setFechaLlegada(LocalDateTime.of(fecha, horaSalida).plusMinutes(obtenerDuracionDeUnVuelo((aviones.get(i).getDisposicion().name().substring(0,2) + destinos[i].name().substring(0,2)))));
+			aviones.get(i).setDisposicion(destinos[i]);
+		}
+		vuelosDiarios.add(vuelosHoy,BorderLayout.CENTER);
+		JButton botonVuelta=new JButton("Volver");
+		botonVuelta.addActionListener(this);
+		botonVuelta.setActionCommand("Volver");
+		vuelosDiarios.add(botonVuelta,BorderLayout.SOUTH);
+		this.setContentPane(vuelosDiarios);
+		vuelosDiarios.revalidate();
+		fecha=fecha.plusDays(1);
+	}
+	public int obtenerDuracionDeUnVuelo(String codigo) {
+		if(!duracionesVuelos.containsKey(codigo)) {
+			int duracion=0;
+			do {
+				duracion=Integer.parseInt(JOptionPane.showInputDialog("Introduzca duración de vuelo:"));
+			} while (duracion<=0 || duracion>300);
+		}
+		return duracionesVuelos.get(codigo);
 	}
 
 	@Override
@@ -127,6 +156,7 @@ public class Principal extends JFrame implements ActionListener{
 			listarVuelos(this);
 			break;
 		case "Volver":
+			fechamostrada.setText(fecha.format(formateo));
 			this.setContentPane(contentPane);
 			contentPane.revalidate();
 			break;
