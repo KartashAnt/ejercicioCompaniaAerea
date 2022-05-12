@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ public class Principal extends JFrame implements ActionListener{
 
 	static JPanel contentPane;
 	static JButton botonListado;
+	static JButton botonVolar;
 	static LocalDate fecha;
 	static JLabel fechamostrada;
 	static DateTimeFormatter formateo=DateTimeFormatter.ofPattern("dd/MM/YYYY");
@@ -44,8 +46,12 @@ public class Principal extends JFrame implements ActionListener{
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel(new BorderLayout());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		botonVolar=new JButton("Pasar un dia");
+		contentPane.add(botonVolar, BorderLayout.EAST);
+		botonVolar.addActionListener(this);
+		botonVolar.setActionCommand("Volar");
 		botonListado=new JButton("Listar vuelos");
-		contentPane.add(botonListado, BorderLayout.CENTER);
+		contentPane.add(botonListado, BorderLayout.WEST);
 		botonListado.addActionListener(this);
 		botonListado.setActionCommand("Lista");
 		fechamostrada=new JLabel();
@@ -73,7 +79,7 @@ public class Principal extends JFrame implements ActionListener{
 			}
 		}
 		else {
-			lista+="\nTodavía no se realizo ningun vuelo";
+			lista+="\nTodav\u00EDa no se realizo ningun vuelo";
 		}
 		JTextArea texto= new JTextArea(lista);
 		JScrollPane listado=new JScrollPane(texto);
@@ -107,18 +113,28 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	
 	public void pasarElDia() {
-		
+		Random r=new Random();
+		int hora=r.nextInt(17)+7;
+		int minuto=r.nextInt(12)*5;
+		LocalTime horaSalida=LocalTime.of(hora, minuto);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando=e.getActionCommand();
-		if(comando.equals("Lista")) {
+		switch (comando) {
+		case "Lista":
 			listarVuelos(this);
-		}
-		else if(comando.equals("Volver")) {
+			break;
+		case "Volver":
 			this.setContentPane(contentPane);
 			contentPane.revalidate();
+			break;
+		case "Volar":
+			pasarElDia();
+			break;
+		default:
+			break;
 		}
 	}
 }
