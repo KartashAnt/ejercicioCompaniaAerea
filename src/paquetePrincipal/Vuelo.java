@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Vuelo {
 	static final DateTimeFormatter formateo=DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm");
+	static final DateTimeFormatter formateoHoras=DateTimeFormatter.ofPattern("HH:mm");
 	static int numVuelo=0;
 	private int numAvion;
 	private String codigo;
@@ -45,9 +46,17 @@ public class Vuelo {
 				return this.codigo + " : " + origen + " -> " + destino + " : " + fechaSalida.format(formateo) + " -> " + fechaLlegada.format(formateo);
 		}
 		else {
-			return this.codigo + " : " + origen + " -> " + destino + "-----------------------------" + fechaSalida.getHour() + ":" + fechaSalida.getMinute();
+			return this.codigo + " : " + origen + " -> " + destino + "-----------------------------" + fechaSalida.format(formateoHoras);
 		}
 		
+	}
+	public String mostrarHoraLLegada() {
+		if(fechaSalida.getDayOfYear()!=fechaLlegada.getDayOfYear()) {
+			return "Hora de la llegada de avíon" + this.numAvion + ": " + fechaLlegada.format(formateoHoras) + " de la día siguiente";
+		}
+		else {
+			return "Hora de la llegada de avíon" + this.numAvion + ": " + fechaLlegada.format(formateoHoras);
+		}
 	}
 	public String generarCodigo(){
 		return numAvion+origen.name().substring(0,2)+destino.name().substring(0,2)+numVuelo;

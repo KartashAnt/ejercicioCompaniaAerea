@@ -1,6 +1,7 @@
 package paquetePrincipal;
 
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -119,6 +120,13 @@ public class Principal extends JFrame implements ActionListener{
 		JTextArea vuelosHoy=new JTextArea();
 		Random r=new Random();
 		Ciudad[] destinos=generarDestinos();
+		this.setContentPane(vuelosDiarios);
+		vuelosDiarios.revalidate();
+		JButton botonVuelta=new JButton("Volver");
+		botonVuelta.addActionListener(this);
+		botonVuelta.setActionCommand("Volver");
+		vuelosDiarios.add(botonVuelta,BorderLayout.SOUTH);
+		vuelosDiarios.add(vuelosHoy,BorderLayout.CENTER);
 		vuelosHoy.append("Vuelos:\t" + fechamostrada.getText() + "\t\t" + "Hora de la salida");
 		for (int i = 0; i < destinos.length; i++) {
 			int hora=r.nextInt(17)+7;
@@ -129,21 +137,22 @@ public class Principal extends JFrame implements ActionListener{
 			vuelos.getLast().setFechaLlegada(LocalDateTime.of(fecha, horaSalida).plusMinutes(obtenerDuracionDeUnVuelo((aviones.get(i).getDisposicion().name().substring(0,2) + destinos[i].name().substring(0,2)))));
 			aviones.get(i).setDisposicion(destinos[i]);
 		}
-		vuelosDiarios.add(vuelosHoy,BorderLayout.CENTER);
-		JButton botonVuelta=new JButton("Volver");
-		botonVuelta.addActionListener(this);
-		botonVuelta.setActionCommand("Volver");
-		vuelosDiarios.add(botonVuelta,BorderLayout.SOUTH);
-		this.setContentPane(vuelosDiarios);
-		vuelosDiarios.revalidate();
+		for (int i = 0; i < aviones.size(); i++) {
+			vuelosHoy.append("\n"+vuelos.get(vuelos.size()-4+i).mostrarHoraLLegada());
+		}
 		fecha=fecha.plusDays(1);
 	}
 	public int obtenerDuracionDeUnVuelo(String codigo) {
 		if(!duracionesVuelos.containsKey(codigo)) {
 			int duracion=0;
 			do {
-				duracion=Integer.parseInt(JOptionPane.showInputDialog("Introduzca duración de vuelo:"));
+				try {
+					duracion=Integer.parseInt(JOptionPane.showInputDialog("Introduzca duración de último vuelo en la\nlista en minutos con un maxímo de 300:"));
+				} catch (NumberFormatException e) {
+					duracion=0;
+				}
 			} while (duracion<=0 || duracion>300);
+			duracionesVuelos.put(codigo, duracion);
 		}
 		return duracionesVuelos.get(codigo);
 	}
