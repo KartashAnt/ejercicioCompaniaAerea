@@ -223,7 +223,7 @@ public class Principal extends JFrame implements ActionListener{
 			int duracion=0;
 			do {
 				try {
-					duracion=Integer.parseInt(JOptionPane.showInputDialog("Introduzca duración de último vuelo en la\nlista en minutos con un maxímo de 300:"));
+					duracion=Integer.parseInt(JOptionPane.showInputDialog("Introduzca duracion de último vuelo en la\nlista en minutos con un maximo de 300:"));
 				} catch (NumberFormatException e) {
 					duracion=0;
 				}
