@@ -57,13 +57,13 @@ public class Vuelo {
 
 	// Muestro solo la hora de la llegada
 	public String mostrarHoraLLegada() {
-		// Si llegaba el otro día
+		// Si llegaba el otro dia
 		if (fechaHoraSalida.getDayOfYear() != fechaHoraLlegada.getDayOfYear()) {
-			return "Hora de la llegada de avíon" + this.numAvion + ": " + fechaHoraLlegada.format(formateoHoras) + " de la día siguiente";
+			return "Hora de la llegada de avion" + this.numAvion + ": " + fechaHoraLlegada.format(formateoHoras) + " de la dia siguiente";
 		}
 		// Si llega el dia de la salida
 		else {
-			return "Hora de la llegada de avíon" + this.numAvion + ": " + fechaHoraLlegada.format(formateoHoras);
+			return "Hora de la llegada de avion" + this.numAvion + ": " + fechaHoraLlegada.format(formateoHoras);
 		}
 	}
 
